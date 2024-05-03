@@ -1,0 +1,98 @@
+{% extends "base2.html" %}
+{% block content %}
+
+<div class="container">
+  <h3 class="pb-3 mb-4 font-italic border-bottom">
+    This journey has {{ tang_starts2 }} steps
+  </h3>
+    <div class="row featurette">
+        <div class="col-lg-4">
+            <img src="{{ url_for('one_d_graph') }}" alt="Generic placeholder image" width="750" height="100">
+            <h2>Randomly chosen step</h2>
+            <p>See 4 tangents chosen from a random step in the journey</p>
+            <a class="btn btn-success" href="javascript:tang('ran_tan_text{{ session_id }}','ran_tan{{ session_id }}')" role="button">Display</a>
+            <h2><span id="ran_tan_text{{ session_id }}"></span></h2>
+            <p><span id="ran_tan{{ session_id }}"></span></p>
+            
+        </div>  
+    </div>
+    <hr class="featuette-divider">
+    <div class="row featurette">
+        <div class="col-lg-4">
+            <h2>First 8 steps</h2>
+            <p>See tangents from the start of the journey</p>
+            <p><em>May take a while to load</em></p>
+            <a class="btn btn-success" href="javascript:tang_start('tang_start{{ session_id }}')" role="button">Display</a>
+            <p><span id="tang_start{{ session_id }}"></span></p>
+            
+            
+              
+            
+        </div>  
+    </div>
+    <hr class="featuette-divider">
+    <div class="row featurette">
+        <div class="col-lg-4">
+            <h2>Last 5 steps</h2>
+            <p>See the final tangents before the root is reached</p>
+            <a class="btn btn-success" href="javascript:tang_end('tang_end{{ session_id }}')" role="button">Display</a>
+            <p><span id="tang_end{{ session_id }}"></span></p>
+            
+              
+            
+        </div>  
+    </div>
+    
+
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p> 
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p> 
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p> 
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p> 
+
+<script>
+  async function tang(destElem1,destElem2) {
+        document.getElementById(destElem2).innerHTML =
+        '<img src="{{ url_for('static', filename='loading.gif') }}">';
+    const response=await fetch('/tang_graph', {
+      method:'POST'
+
+    })
+    const data=await response.json();
+    document.getElementById(destElem1).innerText=data.key
+    document.getElementById(destElem2).innerHTML='<img src="{{ url_for('tang_graph2') }}" alt="General placeholder image" height="500">';
+  }  
+  async function tang_start(destElem) {
+        document.getElementById(destElem).innerHTML =
+        '<img src="{{ url_for('static', filename='loading.gif') }}">';
+    const response=await fetch('/tang_graph_start', {
+      method:'POST'
+
+    })
+    const data=await response.json();
+    document.getElementById(destElem).innerHTML='<img src="{{ url_for('tang_graph_start2') }}" alt="General placeholder image" height="500">';
+  } 
+  async function tang_end(destElem) {
+        document.getElementById(destElem).innerHTML =
+        '<img src="{{ url_for('static', filename='loading.gif') }}">';
+    const response=await fetch('/tang_graph_end', {
+      method:'POST'
+
+    })
+    const data=await response.json();
+    document.getElementById(destElem).innerHTML='<img src="{{ url_for('tang_graph_end2') }}" alt="General placeholder image" height="500">';
+  }
+</script>
+{% endblock %}

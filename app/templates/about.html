@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>&nbsp;</p> 
+<p>This project was inspired in large part by this youtube video by 3Blue1Brown.</p>
+<p>&nbsp;</p> 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-RdOwhmqP5s?si=D6DCBPA_bueBtG-P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<p>&nbsp;</p> 
+<p>Watch from 5.40 - 9.45 mins.
+    I was very impressed by the 'journey' that is taken with this method, form the inital guess or 'starting point' of an x value,
+    to all the subsequent x values until a root was found.
+    I wondered if there was any pattern behind it. The equation that was shown in the video 
+    resulted in some cool journeys
+</p>
+<p>&nbsp;</p> 
+<img src="{{ url_for('youtube_image') }}" alt="Image Placeholder" height="400">
+<p>&nbsp;</p> 
+<p>But I wanted if other equations could produce even more interesting journeys</p>
+<p>I experimented with python and matplotlib and I found that there is a big variety. 
+    Some equations interesting, others not really. Some equations had step counts that went on longer than my program could compute. In these I looked for a
+    loop pattern but didn't find one. Others went so far to the left or right on the x axis that it took my computer too long to compute.
+    The most interesting equations had (what is the mathematical term...?) turning points, that were close to the x axis but not crossing it. 
+    So for example, this equation
+</p>
+<p>&nbsp;</p> 
+<img src="{{ url_for('eg1') }}" alt="Image Placeholder" height="500">
+<p>&nbsp;</p> 
+<p>would be far more interesting than this one</p>
+<p>&nbsp;</p> 
+<img src="{{ url_for('eg2') }}" alt="Image Placeholder" height="500">
+<p>&nbsp;</p> 
+<p>I decided to make a website so that others can try out different equations. If you're a bit of a maths nerd like me and get a kick out of pure maths(poor you!)
+    then maybe you can have fun trying out some equations of your own. Credit goes to Miguel Grinberg whose excellent <a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world">Flask tutorial</a>
+    equipped me with the knowledge to make this a website.
+</p>
+<p>&nbsp;</p> 
+<p>I'm happy to hear any questions or feedback! Please email me at finlayaiken@gmail.com
+</p>
+
+
+{% endblock %}

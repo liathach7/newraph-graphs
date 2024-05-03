@@ -1,0 +1,1 @@
+FLASK_APP=newton_graphs2.py
