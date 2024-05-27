@@ -110,7 +110,6 @@ class Functions():
         fig1.savefig(file_str)
         with open(file_str, "rb") as image_file:
             data = base64.b64encode(image_file.read()).decode()
-            print('zoomer: ',type(data))
         os.remove(file_str)
         return data
     def zoom_graph(equation,lower_limit,upper_limit):
@@ -252,9 +251,9 @@ class Functions():
         return data
     
     def tang_graph(megalist_x,megalist_y,equation,mask_starts):
-        tang_range_total = megalist_x[0] + megalist_x[1] + megalist_x[2] + megalist_x[3]
-        x_min = min(tang_range_total)
-        x_max = max(tang_range_total)
+        #tang_range_total = megalist_x[0] + megalist_x[1] + megalist_x[2] + megalist_x[3]
+        x_min = min(megalist_x)
+        x_max = max(megalist_x)
         R2 = x_max - x_min
         number_of_steps2 = 200
         F2 = number_of_steps2 / R2
@@ -286,20 +285,20 @@ class Functions():
         #
         ax3.plot(x_range3, y_range4, c='b', label=label1)
         
-        x_range=np.concatenate([megalist_x[0],megalist_x[1],megalist_x[2],megalist_x[3]])
-        y_range=np.concatenate([megalist_y[0],megalist_y[1],megalist_y[2],megalist_y[3]])
-        ax3.plot(x_range[0],y_range[0],c='darkgreen',label='tangents')
+        #x_range=np.concatenate([megalist_x[0],megalist_x[1],megalist_x[2],megalist_x[3]])
+        #y_range=np.concatenate([megalist_y[0],megalist_y[1],megalist_y[2],megalist_y[3]])
+        ax3.plot(megalist_x[0],megalist_y[0],c='darkgreen',label='tangents')
         ax3.legend(loc='upper left')
-        m_y_range=ma.array(y_range)
+        m_y_range=ma.array(megalist_y)
         m_y_range[mask_starts[0]]=ma.masked
         m_y_range[mask_starts[1]]=ma.masked
         m_y_range[mask_starts[2]]=ma.masked
-        moving=ax3.plot(x_range,m_y_range,c='darkgreen',label=label1)[0]
+        moving=ax3.plot(megalist_x,m_y_range,c='darkgreen',label=label1)[0]
         def update(frame):
-            moving.set_xdata(x_range[:frame])
+            moving.set_xdata(megalist_x[:frame])
             moving.set_ydata(m_y_range[:frame])
             return(moving)
-        ani=animation.FuncAnimation(fig=fig3,func=update,frames=len(x_range),interval=4000,repeat=False)
+        ani=animation.FuncAnimation(fig=fig3,func=update,frames=len(megalist_x),interval=4000,repeat=False)
         writer=animation.PillowWriter(fps=15,metadata=dict(artist='Me'),bitrate=1800)
         session_id=str(id(session))
         file_str='app//temp//ran_tan'+session_id+'.gif'
@@ -310,7 +309,14 @@ class Functions():
         os.remove(file_str)
         return data
     def tang_graph_start(megalist_x2,megalist_y2,tang_starts2,equation,mask_starts):
-        tang_range_total = megalist_x2[0] + megalist_x2[1] + megalist_x2[2] + megalist_x2[3] + megalist_x2[4] + megalist_x2[5] + megalist_x2[6] + megalist_x2[7]
+        try:
+            tang_range_total = megalist_x2[0] + megalist_x2[1] + megalist_x2[2] + megalist_x2[3] + megalist_x2[4] + megalist_x2[5] + megalist_x2[6] + megalist_x2[7]
+        except IndexError:
+            file_str='app//static//error_8_steps.jpg'
+            with open(file_str, "rb") as image_file:
+                data = base64.b64encode(image_file.read()).decode()
+                print('start tan: ',type(data))
+            return data
         #sets main function, makes sure it's always displayed
         x_min = min(tang_range_total)
         x_max = max(tang_range_total)
@@ -783,9 +789,10 @@ class Functions():
             y_range_tang1 = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang1]
             mask_start=len(x_range_tang1)
             mask_starts.append(mask_start)
-            session['megalist_x_1']=x_range_tang1
-            megalist_x.append(x_range_tang1)
-            megalist_y.append(y_range_tang1)
+            for value in x_range_tang1:
+                megalist_x.append(value)
+            for value in y_range_tang1:
+                megalist_y.append(value)
             step += 1
             y_x1 = y
             x1 = x
@@ -803,8 +810,10 @@ class Functions():
             y_range_tang2 = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang2]
             mask_start=len(x_range_tang2)+mask_starts[-1]
             mask_starts.append(mask_start)
-            megalist_x.append(x_range_tang2)
-            megalist_y.append(y_range_tang2)
+            for value in x_range_tang2:
+                megalist_x.append(value)
+            for value in y_range_tang2:
+                megalist_y.append(value)
             step += 1
             y_x1 = y
             x1 = x
@@ -822,8 +831,10 @@ class Functions():
             y_range_tang3 = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang3]
             mask_start=len(x_range_tang3)+mask_starts[-1]
             mask_starts.append(mask_start)
-            megalist_x.append(x_range_tang3)
-            megalist_y.append(y_range_tang3)
+            for value in x_range_tang3:
+                megalist_x.append(value)
+            for value in y_range_tang3:
+                megalist_y.append(value)
             step += 1
             y_x1 = y
             x1 = x
@@ -844,8 +855,10 @@ class Functions():
             y_range_tang4 = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang4]
             #mask_start=len(x_range_tang4)+mask_starts[-1]
             #mask_starts.append(mask_start)
-            megalist_x.append(x_range_tang4)
-            megalist_y.append(y_range_tang4)
+            for value in x_range_tang4:
+                megalist_x.append(value)
+            for value in y_range_tang4:
+                megalist_y.append(value)
             step += 1
             y_x1 = y
             x1 = x
