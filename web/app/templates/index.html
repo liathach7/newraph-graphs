@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+<h1>Enter equation</h1>
+<div class="row">
+    <div class="col">
+        {{ wtf.quick_form(form) }}
+    </div>
+    <div class="col">
+        <p>&nbsp;</p>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Suggested equations
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="javascript:suggester1('eq1_dest')">x^6 - 120*x^2 + 48*x + 389</a>
+                <a class="dropdown-item" href="javascript:suggester2('eq2_dest')">5*x^3 + 3^x - 5^x + 0.15</a>
+                <a class="dropdown-item" href="javascript:suggester3('eq3_dest')">x^3 - x^2 + 0.25</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p><span id="eq1_dest"></span><span id="eq2_dest"></span><span id="eq3_dest"></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p> 
+
+<!--
+<script src="content/js/jquery.min.js"></script>
+<script src="content/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
+-->
+
+<script>
+
+    async function suggester1(destElem) {
+        const response = await fetch('/suggestion_eq1', {
+          method: 'POST',
+        })
+        const data = await response.json();
+        document.getElementById(destElem).innerHTML ='<meta http-equiv="refresh" content="0; url=suggestion1">';
+      }
+
+
+    async function suggester2(destElem) {
+    const response = await fetch('/suggestion_eq2', {
+        method: 'POST',
+    })
+    const data = await response.json();
+    document.getElementById(destElem).innerHTML ='<meta http-equiv="refresh" content="0; url=suggestion1">';
+    }
+
+    async function suggester3(destElem) {
+    const response = await fetch('/suggestion_eq3', {
+        method: 'POST',
+    })
+    const data = await response.json();
+    document.getElementById(destElem).innerHTML ='<meta http-equiv="refresh" content="0; url=suggestion1">';
+    }
+
+
+    
+</script>
+
+
+{% endblock %}
+
