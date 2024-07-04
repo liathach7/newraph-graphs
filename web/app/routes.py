@@ -258,18 +258,13 @@ def zoom_graph():
         ll_flt=float(ll_str)
         ul_flt=float(ul_str)
     gif_url=f.zoom_graph(eq,ll_flt,ul_flt)
-    tester=db.session.query(PixelString).filter(User.cookie_code==cookie_code)
-    i=0
-    for t in tester:
-        i+=1
-    if i>1:
-        for t in tester:
-            ayedee=t.id
-        entry=db.session.get(PixelString,ayedee)
-        entry.pix_str=gif_url
-    else:
-        entry=PixelString(cookie_code=cookie_code,pix_str=gif_url)
-        db.session.add(entry)
+    #deleting previous pixel string if there
+    entries=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
+    for e in entries:
+        db.session.delete(e)
+        db.session.commit()
+    entry2=PixelString(cookie_code=cookie_code,pix_str=gif_url)
+    db.session.add(entry2)
     db.session.commit()
     return {'show_word':'boo'}
 
@@ -337,6 +332,11 @@ def stem_graph():
     #db.session.add(entry2)
     #db.session.commit()
     print('the cookie_code is ',cookie_code)
+    #deleting previous pixel string if there
+    entries=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
+    for e in entries:
+        db.session.delete(e)
+        db.session.commit()
     img_url=f.stem_graph(x_range2,step_list)
     entry2=PixelString(cookie_code=cookie_code,pix_str=img_url)
     db.session.add(entry2)
@@ -396,8 +396,16 @@ def steps():
     x_range2 = f.x_range3(ll_flt, ul_flt, num_journeys)
     y_range = f.y_range(eq, x_range2)
     img_url=f.coloured_graph(x_range2,y_range,step_list)
+    #deleting previous pixel string if there
+    entries=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
+    for e in entries:
+        db.session.delete(e)
+        db.session.commit()
+    entry2=PixelString(cookie_code=cookie_code,pix_str=img_url)
+    db.session.add(entry2)
+    db.session.commit()
     #checks if another entry with same cookie code already exists in database
-    tester=db.session.query(PixelString).filter(User.cookie_code==cookie_code)
+    """tester=db.session.query(PixelString).filter(User.cookie_code==cookie_code)
     i=0
     for t in tester:
         i+=1
@@ -422,7 +430,7 @@ def steps():
     query=sa.select(PixelString)
     entries=db.session.scalars(query)
     for e in entries:
-        print('entry id is',entry.id,'\nentry cookie code is ',entry.cookie_code,'\nentry pix_str is ',entry.pix_str,'\ntmime stamp ',entry.timestamp)
+        print('entry id is',entry.id,'\nentry cookie code is ',entry.cookie_code,'\nentry pix_str is ',entry.pix_str,'\ntmime stamp ',entry.timestamp)"""
     return {'some text':'other text'}
 
 @app.route('/coloured_graph')
@@ -636,6 +644,7 @@ def tang_graph_start():
 
 @app.route('/tang_graph_start2')
 def tang_graph_start2():
+    fixed_issue=0
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
@@ -648,7 +657,10 @@ def tang_graph_start2():
         b = bytearray(f)
     gif_bytes=io.BytesIO(b)
     os.remove(gif_url)
-    return send_file(gif_bytes,mimetype='image/gif')
+    if fixed_issue==1:
+        return send_file(gif_bytes,mimetype='image/gif')
+    else:
+        return 'not fixed'
 
 @app.route('/tang_graph_end',methods=['POST'])
 def tang_graph_end():
