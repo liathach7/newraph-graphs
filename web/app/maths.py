@@ -92,7 +92,6 @@ class Functions():
         ax4.legend(loc='upper left')
         return fig4
     def stem_graph(x,y):
-        print('reached here,2')
         fig1 = Figure()
         ax1=fig1.subplots()
         ax1.stem(x,y,linefmt='green',markerfmt='D',bottom=0)
@@ -115,17 +114,6 @@ class Functions():
         #file_path = os.path.join(VOLUME_PATH, file_name)
         file_path=os.path.join('app','temp',file_name)
         fig1.savefig(file_path)
-        dir_path_linux=Path('app').joinpath('temp')
-        #onlyfiles = [f for f in os.listdir('/mnt/app/') if os.path.isfile(os.path.join('/mnt/app/', f))]
-        try:
-            #onlyfiles = [f for f in os.listdir(file_path_linux) if os.path.isfile(os.path.join(file_path, f))]
-            onlyfiles = [f for f in os.listdir(dir_path_linux) if os.path.isfile(Path('app').joinpath('temp').joinpath(f))]
-            for file in onlyfiles:
-                print('file in ',dir_path_linux,' : ',file)
-            if len(onlyfiles)<1:
-                print('no files found in ',file_path)
-        except:
-            print('couldnt search through directory')
         return file_path
     def tsg_error(x_range2,y_range2,error):
         file_str='app//static//error_8_steps.png'
@@ -134,27 +122,20 @@ class Functions():
         return data
     def zoom_graph(equation,lower_limit,upper_limit):
         x_range=np.arange(-20,20,0.05)
-        print('i')
         y_range=[Functions.y_single(equation,x) for x in x_range]
-        print('ii')
         input_range=np.arange(lower_limit,upper_limit,0.1)
-        print('iii')
         y_input_range=[Functions.y_single(equation,x) for x in input_range]
-        print('iv')
         #find a root in equation
         y_range2=[]
         for y in y_range:
             new_y=abs(y)
             y_range2.append(new_y)
-        print('v')
         root=min(y_range2)
-        print('vi')
         index=y_range2.index(root)
         x_range3=np.arange(-95,-85,0.05)
         y_range3=[]
         for i in range(len(x_range3)):
             y_range3.append(0)
-        print('vii')
         fig3 = Figure()
         ax3 = fig3.subplots()
         # setting x axis to always show
@@ -177,7 +158,6 @@ class Functions():
         #for zooming in
         frames=250
         #x axis
-        print('viii')
         x_min_casc_min1=min(x_range)
         x_min_casc_max1=root-4
         frames1=62
@@ -187,7 +167,6 @@ class Functions():
         frames2=63
         moving_frames=frames1+frames2
         x_min_casc2=np.linspace(x_min_casc_min2,x_min_casc_max2,frames2)
-        print('ix')
         x_max_casc_min1=max(x_range)
         x_max_casc_max1=root+4
         x_max_casc1=np.linspace(x_max_casc_min1,x_max_casc_max1,frames1)
@@ -209,7 +188,6 @@ class Functions():
         y_min_casc_max2=min(current_range)
         y_min_casc2=np.linspace(y_min_casc_min2,y_min_casc_max2,frames2)
         #
-        print('x')
         y_max_casc_min1=max(y_range)
         new_index=index-80
         new_index2=index+80
@@ -223,14 +201,11 @@ class Functions():
         y_max_casc_max2=max(current_range)
         y_max_casc2=np.linspace(y_max_casc_min2,y_max_casc_max2,frames2)
         #concatenate
-        print('xi')
         x_min_casc=np.concatenate([x_min_casc1,x_min_casc2])
         x_max_casc=np.concatenate([x_max_casc1,x_max_casc2])
         y_min_casc=np.concatenate([y_min_casc1,y_min_casc2])
         y_max_casc=np.concatenate([y_max_casc1,y_max_casc2])
         #
-        print('number of frames in animation: ',frames,
-        '\nlength of x min casc: ',len(x_min_casc))
         moving=ax3.plot(x_range3,y_range3,c='black',label='hi there')[0]
         #
 
@@ -253,27 +228,15 @@ class Functions():
                     ax3.set_xlim(min_x,max_x)
                     ax3.set_ylim(min_y,max_y)
                 #
-                    print('frame: ',frame)
                     moving.set_xdata(x_range[:frame])
                     moving.set_ydata(y_range[:frame])
             return(moving)
         ani=animation.FuncAnimation(fig=fig3,func=update,frames=frames,interval=3,repeat=False)
         writer=animation.PillowWriter(fps=25,metadata=dict(artist='Me'),bitrate=1800)
-        
-        print('xii')
         session_id=str(id(session))
         file_name='zoom_graph'+session_id+'.png'
         file_path=os.path.join('app','temp',file_name)
         ani.save(file_path,writer=writer)
-        dir_path_linux=Path('app').joinpath('temp')
-        try:
-            onlyfiles = [f for f in os.listdir(dir_path_linux) if os.path.isfile(Path('app').joinpath('temp').joinpath(f))]
-            for file in onlyfiles:
-                print('file in ',dir_path_linux,' : ',file)
-            if len(onlyfiles)<1:
-                print('no files found in ',file_path)
-        except:
-            print('couldnt search through directory')
         return file_path
     
     def tang_graph(megalist_x,megalist_y,equation,mask_starts):
@@ -330,15 +293,6 @@ class Functions():
         file_name='ran_tan'+session_id+'.gif'
         file_path=os.path.join('app','temp',file_name)
         ani.save(file_path,writer=writer)
-        dir_path_linux=Path('app').joinpath('temp')
-        #try:
-        onlyfiles = [f for f in os.listdir(dir_path_linux) if os.path.isfile(Path('app').joinpath('temp').joinpath(f))]
-        for file in onlyfiles:
-            print('file in ',dir_path_linux,' : ',file)
-        if len(onlyfiles)<1:
-            print('no files found in ',file_path)
-        #except:
-        #    print('couldnt search through directory')
         return file_path
     def tang_graph_start(megalist_x2,megalist_y2,tang_starts2,equation,mask_starts):
         try:
@@ -347,7 +301,6 @@ class Functions():
             file_str='app//static//error_8_steps.jpg'
             with open(file_str, "rb") as image_file:
                 data = base64.b64encode(image_file.read()).decode()
-                print('start tan: ',type(data))
             return data
         #sets main function, makes sure it's always displayed
         x_min = min(tang_range_total)
@@ -405,7 +358,6 @@ class Functions():
         #m_y_range[mask_starts[5]]=ma.masked
         #m_y_range[mask_starts[6]]=ma.masked
         moving=ax3.plot(x_range,m_y_range,c='darkgreen',label=label1)[0]
-        print('*** the length of x_range is :',len(x_range))
         def update(frame):
             diff_div=6
             if frame==86:
@@ -553,7 +505,6 @@ class Functions():
         m_y_range[mask_starts[2]]=ma.masked
         m_y_range[mask_starts[3]]=ma.masked
         moving=ax3.plot(x_range,m_y_range,c='darkgreen',label=label1)[0]
-        print('*** the length of x_range is :',len(x_range))
         def update(frame):
             diff_div=6
             if frame==86:
@@ -691,7 +642,6 @@ class Functions():
         fig.savefig('useless_graph.png')
         with open('useless_graph.png', "rb") as image_file:
             data = base64.b64encode(image_file.read()).decode()
-            print('useless graph: ',type(data))
         os.remove('useless_graph.png')
         return data
     def deriv(x_range, equation):
@@ -792,8 +742,6 @@ class Functions():
         y=NumericStringParser().eval(new_equation)
         deriv = Functions.deriv_single(x,equation)
         if abs(y) < tol:
-            print('position: ', position, 'step: ', step)
-            print('megalist_x type: ',type(megalist_x))
             return megalist_x
         elif step == 0:
             step += 1
@@ -1018,7 +966,6 @@ class Functions():
         deriv = Functions.deriv_single(x,equation)
         error=error='tang_starts2 is ',tang_starts2
         if tang_starts2<5:
-            print(error)
             return error
         if abs(y) < tol:
             return Functions.tang_graph_end(megalist_x3,megalist_y3,tang_starts2,equation,mask_starts)
@@ -1099,7 +1046,6 @@ class Functions():
             mask_starts.append(mask_start)
             megalist_x3.append(x_range_tang)
             megalist_y3.append(y_range_tang)
-            print('megalist_x3 has ',len(megalist_x3),' items and should have 7')
             step += 1
             y_x1 = y
             x1 = x
@@ -1119,7 +1065,6 @@ class Functions():
             mask_starts.append(mask_start)
             megalist_x3.append(x_range_tang)
             megalist_y3.append(y_range_tang)
-            print('megalist_x3 has ',len(megalist_x3),' items and should have 8')
             step += 1
             y_x1 = y
             x1 = x
@@ -1149,7 +1094,6 @@ class Functions():
             if diff>timedelta(hours=1):
                 if i in nums:
                     entry2=db.session.get(table,u_id)
-                    print('about to delete ',entry2.id,' from table ',table)
                     db.session.delete(entry2)
                     db.session.commit()
             #elif i>0:
@@ -1157,7 +1101,6 @@ class Functions():
             else:
                 if i in nums:
                     entry2=db.session.get(table,u_id)
-                    print(entry2.id,' with timestamp ',entry2.timestamp,' from table',table,', is too young to be deleted')
             i+=1
 
 

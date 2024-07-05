@@ -16,8 +16,6 @@ fig=''
 @app.route('/')
 @app.route('/enter')
 def enter():
-    cwd=os.getcwd()
-    print('current working directory is ',cwd)
     f.db_delete(User)
     f.db_delete(UserPreset)
     f.db_delete(PixelString)
@@ -57,17 +55,14 @@ def index():
         for e in entry:
             i=+1
         if i>1:
-            print('update entry')
             for e in entry:
                 ayedee=e.id
-            print('id is ',ayedee)
             user=db.session.get(User,ayedee)
             user.lower_limit=ll_str
             user.upper_limit=ul_str
             user.equation=eq
             db.session.commit()
         else:
-            print('new entry')
             user=User(lower_limit=ll_str,upper_limit=ul_str,equation=eq,cookie_code=cookie_code)
             db.session.add(user)
             db.session.commit()
@@ -92,15 +87,12 @@ def suggestion_eq1():
     for e in entry:
         i=+1
     if i==1:
-        print('update entry')
         for e in entry:
             ayedee=e.id
-        print('id is ',ayedee)
         user=db.session.get(UserPreset,ayedee)
         user.equation='x^6 - 120*x^2 + 48*x + 389'
         db.session.commit()
     else:
-        print('new entry')
         user=UserPreset(equation='x^6 - 120*x^2 + 48*x + 389',cookie_code=cookie_code)
         db.session.add(user)
         db.session.commit()
@@ -117,15 +109,12 @@ def suggestion_eq2():
     for e in entry:
         i=+1
     if i==1:
-        print('update entry')
         for e in entry:
             ayedee=e.id
-        print('id is ',ayedee)
         user=db.session.get(UserPreset,ayedee)
         user.equation='5*x^3 + 3^x - 5^x + 0.15'
         db.session.commit()
     else:
-        print('new entry')
         user=UserPreset(equation='5*x^3 + 3^x - 5^x + 0.15',cookie_code=cookie_code)
         db.session.add(user)
         db.session.commit()
@@ -142,15 +131,12 @@ def suggestion_eq3():
     for e in entry:
         i=+1
     if i==1:
-        print('update entry')
         for e in entry:
             ayedee=e.id
-        print('id is ',ayedee)
         user=db.session.get(UserPreset,ayedee)
         user.equation='x^3 - x^2 + 0.25'
         db.session.commit()
     else:
-        print('new entry')
         user=UserPreset(equation='x^3 - x^2 + 0.25',cookie_code=cookie_code)
         db.session.add(user)
         db.session.commit()
@@ -182,17 +168,14 @@ def suggestion1():
         for e in entry:
             i=+1
         if i==1:
-            print('update entry')
             for e in entry:
                 ayedee=e.id
-            print('id is ',ayedee)
             user=db.session.get(User,ayedee)
             user.lower_limit=ll_str
             user.upper_limit=ul_str
             user.equation=eq
             db.session.commit()
         else:
-            print('new entry')
             user=User(lower_limit=ll_str,upper_limit=ul_str,equation=eq,cookie_code=cookie_code)
             db.session.add(user)
             db.session.commit()
@@ -211,9 +194,7 @@ def results():
         entry=db.session.query(User).filter(User.cookie_code==cookie_code)
         for e in entry:
             eq=e.equation
-            print(eq)
         y_test=f.y_range(eq,[1,2])
-        #traceback.print_stack()
         return render_template('results.html')
     except:
         flash("something's not right. Was the equation typed correctly?")
@@ -225,7 +206,7 @@ def graph():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         eq=e.equation
@@ -236,8 +217,6 @@ def graph():
     x_range2 = f.x_range3(ll_flt, ul_flt, num_journeys2)
     y_range = f.y_range(eq, x_range2)
     fig = f.graph(x_range2, y_range,eq)
-    print('*')
-    print(type(fig))
     img = io.BytesIO()
     fig.savefig(img)
     img.seek(0)
@@ -245,11 +224,10 @@ def graph():
 
 @app.route('/zoom_graph',methods=['POST'])
 def zoom_graph():
-    print('reached zoom_graph')
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         eq=e.equation
@@ -270,11 +248,10 @@ def zoom_graph():
 
 @app.route('/zoom_graph2')
 def zoom_graph2():
-    print('reached zoom_graph2')
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
     for e in entry:
         gif_url=e.pix_str
@@ -302,15 +279,11 @@ def stem_graph():
     y_range = f.y_range(eq, x_range2)
     step=0
     step_list=[]
-    print('reached here,1')
     for x in x_range2:
         f.newton_function(x,step,eq,step_list)
-    print(type(step_list))
-    print(step_list)
     #deleting previous step list if there
     steps=db.session.query(StepList2).filter(StepList2.cookie_code==cookie_code)
     for step in steps:
-        print(step.num_steps,', ',step.cookie_code,' is about to get deleted')
         db.session.delete(step)
         db.session.commit()
         #new_entry=e
@@ -331,7 +304,6 @@ def stem_graph():
     #entry2=PixelString(cookie_code=cookie_code,pix_str=img_str)
     #db.session.add(entry2)
     #db.session.commit()
-    print('the cookie_code is ',cookie_code)
     #deleting previous pixel string if there
     entries=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
     for e in entries:
@@ -345,11 +317,10 @@ def stem_graph():
     
 @app.route('/stem_graph2')
 def stem_graph2():
-    print('reached here,2')
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
     for e in entry:
         img_url=e.pix_str
@@ -374,7 +345,7 @@ def steps():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         eq=e.equation
@@ -404,33 +375,6 @@ def steps():
     entry2=PixelString(cookie_code=cookie_code,pix_str=img_url)
     db.session.add(entry2)
     db.session.commit()
-    #checks if another entry with same cookie code already exists in database
-    """tester=db.session.query(PixelString).filter(User.cookie_code==cookie_code)
-    i=0
-    for t in tester:
-        i+=1
-    if i>1:
-        print('i > 0')
-        for t in tester:
-            ayedee=t.id
-        entry=db.session.get(PixelString,ayedee)
-        print('entry id is',entry.id,'\nentry cookie code is ',entry.cookie_code,'\nentry pix_str is ',entry.pix_str,'\ntmime stamp ',entry.timestamp)
-        entry.pix_str=img_url
-        print('entry id is',entry.id,'\nentry cookie code is ',entry.cookie_code,'\nentry pix_str is ',entry.pix_str,'\ntmime stamp ',entry.timestamp)
-    else:
-        print('i < 1')
-        entry=PixelString(cookie_code=cookie_code,pix_str=img_url)
-        db.session.add(entry)
-    query=sa.select(PixelString)
-    entries=db.session.scalars(query)
-    for e in entries:
-        print('entry id is',entry.id,'\nentry cookie code is ',entry.cookie_code,'\nentry pix_str is ',entry.pix_str,'\ntmime stamp ',entry.timestamp)
-    db.session.commit()
-    print('db commit')
-    query=sa.select(PixelString)
-    entries=db.session.scalars(query)
-    for e in entries:
-        print('entry id is',entry.id,'\nentry cookie code is ',entry.cookie_code,'\nentry pix_str is ',entry.pix_str,'\ntmime stamp ',entry.timestamp)"""
     return {'some text':'other text'}
 
 @app.route('/coloured_graph')
@@ -438,7 +382,7 @@ def coloured_graph():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('html><p>the server cant read your cookie</p></html>')
+        oh=('html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(PixelString).filter(PixelString.cookie_code==cookie_code)
     for e in entry:
         img_url=e.pix_str
@@ -474,7 +418,6 @@ def ran_tan():
         #for step in steps:
         #    s1=step.num_steps
         #    step_list.append(s1)
-    print('step list: ',step_list)
     x_range = f.x_range3(ll_flt, ul_flt, num_journeys)
     x_range2=x_range.tolist()
     x_list=[]
@@ -484,11 +427,9 @@ def ran_tan():
     mask_starts=[]
     tang_starts2=[]
     f.tang(step_list,x_range2,tang_list,eq,megalist_x,megalist_y,tang_starts2,x_list,mask_starts)
-    print('megalist ',megalist_x)
     #add megalist to database
     entries=db.session.query(MegaList).filter(MegaList.cookie_code==cookie_code)
     for e in entries:
-        print(e.id,', ',e.timestamp,', ',e.x,' is about to get deleted')
         db.session.delete(e)
         db.session.commit()
         new_entry=e
@@ -526,24 +467,20 @@ def ran_tan():
         error_mes='Sorry there are not enough steps in this journey to show the tangets. PLease try reloading'
     else:
         error_mes=''
-    print('tang starts 2 is ',tang_starts2)
     # for updating database
     entry2=db.session.query(PixelString3).filter(PixelString3.cookie_code==cookie_code)
     i=0
     for e in entry2:
         i=+1
     if i==1:
-        print('update entry')
         for e in entry2:
             ayedee=e.id
-        print('id is ',ayedee)
         user=db.session.get(PixelString3,ayedee)
         user.ran_x=ran_x
         user.ran_tan_position=position
         user.ran_num_steps=tang_starts2[-1]
         db.session.commit()
     else:
-        print('new entry')
         user=PixelString3(ran_x=ran_x,ran_tan_position=position,ran_num_steps=tang_starts2[-1],tang_str='',start_str='',end_str='',cookie_code=cookie_code)
         db.session.add(user)
         db.session.commit()
@@ -558,7 +495,7 @@ def tang_graph():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         eq=e.equation
@@ -587,7 +524,6 @@ def tang_graph():
     update.tang_str=gif_url
     db.session.commit()
     #^
-    print('reached tang_graph')
     str1=str(ran_tan_position)
     str2=str(ran_num_steps)
     my_str='Starting from position '+str1+' of '+str2
@@ -598,7 +534,7 @@ def tang_graph2():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(PixelString3).filter(PixelString3.cookie_code==cookie_code)
     for e in entry:
         gif_url=e.tang_str
@@ -614,7 +550,7 @@ def tang_graph_start():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         eq=e.equation
@@ -647,7 +583,7 @@ def tang_graph_start2():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     try:
         entry=db.session.query(PixelString3).filter(PixelString3.cookie_code==cookie_code)
         for e in entry:
@@ -670,7 +606,7 @@ def tang_graph_end():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         eq=e.equation
@@ -691,7 +627,7 @@ def tang_graph_end2():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(PixelString3).filter(PixelString3.cookie_code==cookie_code)
     for e in entry:
         gif_url=e.end_str
@@ -707,7 +643,7 @@ def one_d_graph():
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
-        print('<html><p>the server cant read your cookie</p></html>')
+        oh=('<html><p>the server cant read your cookie</p></html>')
     entry=db.session.query(User).filter(User.cookie_code==cookie_code)
     for e in entry:
         ll_str=e.lower_limit
