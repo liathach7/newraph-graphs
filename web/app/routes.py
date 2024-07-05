@@ -644,23 +644,26 @@ def tang_graph_start():
 
 @app.route('/tang_graph_start2')
 def tang_graph_start2():
-    fixed_issue=0
     if request.cookies.get('foo'):
         cookie_code=request.cookies.get('foo')
     else:
         print('<html><p>the server cant read your cookie</p></html>')
-    entry=db.session.query(PixelString3).filter(PixelString3.cookie_code==cookie_code)
-    for e in entry:
-        gif_url=e.start_str
-    with open(gif_url, "rb") as image:
-        f = image.read()
-        b = bytearray(f)
-    gif_bytes=io.BytesIO(b)
-    os.remove(gif_url)
-    if fixed_issue==1:
+    try:
+        entry=db.session.query(PixelString3).filter(PixelString3.cookie_code==cookie_code)
+        for e in entry:
+            gif_url=e.start_str
+        with open(gif_url, "rb") as image:
+            f = image.read()
+            b = bytearray(f)
+        gif_bytes=io.BytesIO(b)
+        os.remove(gif_url)
         return send_file(gif_bytes,mimetype='image/gif')
-    else:
-        return 'not fixed'
+    except:
+        with open('app//static//error_try_reloading.png', "rb") as image_file:
+            data = base64.b64encode(image_file.read()).decode()
+            img_str=base64.b64decode(data)
+            img_bytes=io.BytesIO(img_str)
+        return send_file(img_bytes,mimetype='image/gif')
 
 @app.route('/tang_graph_end',methods=['POST'])
 def tang_graph_end():

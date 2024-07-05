@@ -342,7 +342,7 @@ class Functions():
         return file_path
     def tang_graph_start(megalist_x2,megalist_y2,tang_starts2,equation,mask_starts):
         try:
-            tang_range_total = megalist_x2[0] + megalist_x2[1] + megalist_x2[2] + megalist_x2[3] + megalist_x2[4] + megalist_x2[5] + megalist_x2[6] + megalist_x2[7]
+            tang_range_total = megalist_x2[0] + megalist_x2[1] + megalist_x2[2] + megalist_x2[3] + megalist_x2[4]# + megalist_x2[5] + megalist_x2[6] + megalist_x2[7]
         except IndexError:
             file_str='app//static//error_8_steps.jpg'
             with open(file_str, "rb") as image_file:
@@ -353,10 +353,10 @@ class Functions():
         x_min = min(tang_range_total)
         x_max = max(tang_range_total)
         R2 = x_max - x_min
-        x_min2=x_min -(6*R2)
-        x_max2=x_max + (6*R2)
+        x_min2=x_min -(4*R2)
+        x_max2=x_max + (4*R2)
         x_range10=np.arange(x_min2,x_min,0.1)
-        x_range11=np.arange(x_min,x_max,0.02)
+        x_range11=np.arange(x_min,x_max,0.01)
         x_range12=np.arange(x_max,x_max2,0.1)
         my_array=np.append(x_range10,x_range11)
         x_range3=np.append(my_array,x_range12)
@@ -372,18 +372,18 @@ class Functions():
         #hack to freeze gif at end
         freezer_x=[]
         freezer_y=[]
-        added_x=megalist_x2[7][-1]
-        added_y=megalist_y2[7][-1]
-        for i in range(50):
+        added_x=megalist_x2[4][-1]
+        added_y=megalist_y2[4][-1]
+        for i in range(30):
             freezer_x.append(added_x)
             freezer_y.append(added_y)
-        x_range=np.concatenate([megalist_x2[0],megalist_x2[1],megalist_x2[2],megalist_x2[3],megalist_x2[4],megalist_x2[5],megalist_x2[6],megalist_x2[7],freezer_x])
-        y_range=np.concatenate([megalist_y2[0],megalist_y2[1],megalist_y2[2],megalist_y2[3],megalist_y2[4],megalist_y2[5],megalist_y2[6],megalist_y2[7],freezer_y])
+        x_range=np.concatenate([megalist_x2[0],megalist_x2[1],megalist_x2[2],megalist_x2[3],megalist_x2[4],freezer_x])
+        y_range=np.concatenate([megalist_y2[0],megalist_y2[1],megalist_y2[2],megalist_y2[3],megalist_y2[4],freezer_y])
         #initial axes range
-        min_x=min(x_range[:63])
-        max_x=max(x_range[:63])
-        min_y=min(y_range[:63])
-        max_y=max(y_range[:63])
+        min_x=min(x_range[:33])
+        max_x=max(x_range[:33])
+        min_y=min(y_range[:33])
+        max_y=max(y_range[:33])
         diff_x=(max_x-min_x)/4
         diff_y=(max_y-min_y)/4
         min_x-=diff_x
@@ -401,18 +401,18 @@ class Functions():
         m_y_range[mask_starts[1]]=ma.masked
         m_y_range[mask_starts[2]]=ma.masked
         m_y_range[mask_starts[3]]=ma.masked
-        m_y_range[mask_starts[4]]=ma.masked
-        m_y_range[mask_starts[5]]=ma.masked
-        m_y_range[mask_starts[6]]=ma.masked
+        #m_y_range[mask_starts[4]]=ma.masked
+        #m_y_range[mask_starts[5]]=ma.masked
+        #m_y_range[mask_starts[6]]=ma.masked
         moving=ax3.plot(x_range,m_y_range,c='darkgreen',label=label1)[0]
         print('*** the length of x_range is :',len(x_range))
         def update(frame):
             diff_div=6
-            if frame==116:
-                min_x=min(x_range[106:-1])
-                max_x=max(x_range[106:-1])
-                min_y=min(y_range[106:-1])
-                max_y=max(y_range[106:-1])
+            if frame==86:
+                min_x=min(x_range[54:106])
+                max_x=max(x_range[54:106])
+                min_y=min(y_range[54:106])
+                max_y=max(y_range[54:106])
                 diff_div=0.25
                 diff_x=(max_x-min_x)*diff_div
                 diff_y=(max_y-min_y)*diff_div
@@ -422,20 +422,20 @@ class Functions():
                 max_y+=diff_y
                 ax3.set_xlim(min_x,max_x)
                 ax3.set_ylim(min_y,max_y)
-            elif 116>frame>1:
+            elif 86>frame>1:
                 if frame%2==0:
                     min_x_list=[]
                     max_x_list=[]
                     min_y_list=[]
                     max_y_list=[]
                     smoother_num=25
-                    if frame<37:
+                    if frame<32:
                         lower_limit=0
-                        upper_limit=frame+15
+                        upper_limit=frame+20
                         smoother_num=math.floor(upper_limit/2)
                     else:
-                        upper_limit=frame+15
-                        lower_limit=frame-37
+                        upper_limit=frame+20
+                        lower_limit=frame-32
                     #print('frame: ',frame,'\nupper lim: ',upper_limit,'\nlower lim: ',lower_limit,
                     #'\nsmoother num: ',smoother_num)
                     x_axis_limits=list(x_range[lower_limit:upper_limit])
@@ -461,23 +461,23 @@ class Functions():
                     max_x=np.mean(max_x_list)
                     min_y=np.mean(min_y_list)
                     max_y=np.mean(max_y_list)
-                    if frame==107:
+                    if frame==77:
                         diff_div=4.5
-                    if frame==108:
+                    if frame==78:
                         diff_div=3
-                    if frame==109:
+                    if frame==79:
                         diff_div=2.25
-                    if frame==110:
+                    if frame==80:
                         diff_div=1.5
-                    if frame==111:
+                    if frame==81:
                         diff_div=1.125
-                    if frame==112:
+                    if frame==82:
                         diff_div=0.75
-                    if frame==113:
+                    if frame==83:
                         diff_div=0.5625
-                    if frame==114:
+                    if frame==84:
                         diff_div=0.375
-                    if frame==115:
+                    if frame==85:
                         diff_div=0.333
                     diff_x=diff_div*(max_x-min_x)
                     diff_y=diff_div*(max_y-min_y)
@@ -994,64 +994,6 @@ class Functions():
                 else:
                     added = x1 - (i * jump)
                     x_range_tang.append(added)
-            y_range_tang = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang]
-            mask_start=len(x_range_tang) + mask_starts[-1]
-            mask_starts.append(mask_start)
-            megalist_x2.append(x_range_tang)
-            megalist_y2.append(y_range_tang)
-            step += 1
-            y_x1 = y
-            x1 = x
-            return Functions.draw_tangents_start(equation,x-y/deriv,step,x1,y_x1,megalist_x2,megalist_y2,tang_starts2,mask_starts,x_range2,y_range2, error)
-        elif step==6:
-            jump=(abs(x1-x))/nm_div
-            x_range_tang=[]
-            for i in range(num_points):
-                if x1<x:
-                    added=x1+(i*jump)
-                    x_range_tang.append(added)
-                else:
-                    added = x1 - (i * jump)
-                    x_range_tang.append(added)
-            y_range_tang = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang]
-            mask_start=len(x_range_tang) + mask_starts[-1]
-            mask_starts.append(mask_start)
-            megalist_x2.append(x_range_tang)
-            megalist_y2.append(y_range_tang)
-            step += 1
-            y_x1 = y
-            x1 = x
-            return Functions.draw_tangents_start(equation,x-y/deriv,step,x1,y_x1,megalist_x2,megalist_y2,tang_starts2,mask_starts,x_range2,y_range2, error)
-        elif step==7:
-            jump=(abs(x1-x))/nm_div
-            x_range_tang=[]
-            for i in range(num_points):
-                if x1<x:
-                    added=x1+(i*jump)
-                    x_range_tang.append(added)
-                else:
-                    added = x1 - (i * jump)
-                    x_range_tang.append(added)
-            y_range_tang = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang]
-            mask_start=len(x_range_tang) + mask_starts[-1]
-            mask_starts.append(mask_start)
-            megalist_x2.append(x_range_tang)
-            megalist_y2.append(y_range_tang)
-            step += 1
-            y_x1 = y
-            x1 = x
-            return Functions.draw_tangents_start(equation,x-y/deriv,step,x1,y_x1,megalist_x2,megalist_y2,tang_starts2,mask_starts,x_range2,y_range2, error)
-        elif step==8:
-            jump=(abs(x1-x))/nm_div
-            x_range_tang=[]
-            for i in range(num_points):
-                if x1<x:
-                    added=x1+(i*jump)
-                    x_range_tang.append(added)
-                else:
-                    added = x1 - (i * jump)
-                    x_range_tang.append(added)
-            print('******','\nthe length of x_range_tang is ',len(x_range_tang))
             y_range_tang = [((x_tang - x) * (y_x1 / (x1 - x))) for x_tang in x_range_tang]
             mask_start=len(x_range_tang) + mask_starts[-1]
             mask_starts.append(mask_start)
