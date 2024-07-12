@@ -856,7 +856,7 @@ class Functions():
         new_equation=equation.replace('x',str(x))
         y=NumericStringParser().eval(new_equation)
         deriv = Functions.deriv_single(x,equation)
-        if tang_starts2<8:
+        if tang_starts2<5:
             return Functions.tsg_error(x_range2,y_range2,error)
         if abs(y) < tol:
             return Functions.tang_graph_start(megalist_x2,megalist_y2,tang_starts2,equation,mask_starts)
