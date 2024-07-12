@@ -16,6 +16,7 @@ from app import db
 from datetime import date,datetime,timedelta,timezone
 #from app.config import VOLUME_PATH
 from pathlib import Path
+from time import sleep
 
 
 class Functions():
@@ -313,7 +314,15 @@ class Functions():
         x_range12=np.arange(x_max,x_max2,0.1)
         my_array=np.append(x_range10,x_range11)
         x_range3=np.append(my_array,x_range12)
-        y_range4 = [Functions.y_single(equation,x) for x in x_range3]
+        try:
+            y_range4 = [Functions.y_single(equation,x) for x in x_range3]
+        except:
+            sleep(5)
+            try:
+                y_range4 = [Functions.y_single(equation,x) for x in x_range3]
+            except:
+                sleep(15)
+                y_range4 = [Functions.y_single(equation,x) for x in x_range3]
         label1=equation
         fig3 = Figure()
         ax3 = fig3.subplots()
