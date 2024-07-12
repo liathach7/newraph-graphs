@@ -149,40 +149,43 @@ def suggestion1():
     else:
         return '<html><p>the server cant read your cookie</p></html>'
     form=EnterEquation()
-    entry=db.session.query(UserPreset).filter(UserPreset.cookie_code==cookie_code)
-    for e in entry:
-        eq_preset=e.equation
-    form.equation.data=eq_preset
-    if form.validate_on_submit():
-        eq=form.equation.data
-        ll_str=form.lower_limit.data
-        ul_str=form.upper_limit.data
-        ll_flt=float(ll_str)
-        ul_flt=float(ul_str)
-        if ll_flt>ul_flt:
-            flash('the upper limit is too low') 
-            return redirect(url_for('index'))
-        # for updating database
-        entry=db.session.query(User).filter(User.cookie_code==cookie_code)
-        i=0
+    try:
+        entry=db.session.query(UserPreset).filter(UserPreset.cookie_code==cookie_code)
         for e in entry:
-            i=+1
-        if i==1:
+            eq_preset=e.equation
+        form.equation.data=eq_preset
+        if form.validate_on_submit():
+            eq=form.equation.data
+            ll_str=form.lower_limit.data
+            ul_str=form.upper_limit.data
+            ll_flt=float(ll_str)
+            ul_flt=float(ul_str)
+            if ll_flt>ul_flt:
+                flash('the upper limit is too low') 
+                return redirect(url_for('index'))
+            # for updating database
+            entry=db.session.query(User).filter(User.cookie_code==cookie_code)
+            i=0
             for e in entry:
-                ayedee=e.id
-            user=db.session.get(User,ayedee)
-            user.lower_limit=ll_str
-            user.upper_limit=ul_str
-            user.equation=eq
-            db.session.commit()
-        else:
-            user=User(lower_limit=ll_str,upper_limit=ul_str,equation=eq,cookie_code=cookie_code)
-            db.session.add(user)
-            db.session.commit()
-        if ll_flt<-15 or ul_flt>15:
-            return redirect(url_for('confirm'))
-        return redirect(url_for('results'))
-    return render_template('index.html', form=form)
+                i=+1
+            if i==1:
+                for e in entry:
+                    ayedee=e.id
+                user=db.session.get(User,ayedee)
+                user.lower_limit=ll_str
+                user.upper_limit=ul_str
+                user.equation=eq
+                db.session.commit()
+            else:
+                user=User(lower_limit=ll_str,upper_limit=ul_str,equation=eq,cookie_code=cookie_code)
+                db.session.add(user)
+                db.session.commit()
+            if ll_flt<-15 or ul_flt>15:
+                return redirect(url_for('confirm'))
+            return redirect(url_for('results'))
+        return render_template('index.html', form=form)
+    except:
+        return '<html><p>something didnt work</p></html>'
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
